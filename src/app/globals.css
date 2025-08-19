@@ -8,11 +8,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #18181b; /* 主背景色，深灰黑 */
-  --foreground: #fff;    /* 主文字色，浅灰蓝 */
-  --primary: #828282;    /* 主要高亮色，深灰色 */
-  --secondary: #d9dddc;  /* 次级背景色，pearl river */
-  --accent: #d9dddc;     /* 高光色，pearl river */
+  --background: #18181b; 
+  --foreground: #fff;  /*text 1*/
+  --accent: #d9dddc; 
+  --subfore:#a9a9a9;    /*text 2*/
 }
 
 @theme inline {
@@ -27,7 +26,6 @@
     --background: #151517;      /* 深色模式背景 */
     --foreground: #e3e7ee;      /* 深色模式文字 */
     --accent: #d9dddc;          /* 深色模式高光色，pearl river */
-    --subfore:#a9a9a9;
   }
 }
 
