@@ -1,8 +1,18 @@
+/* 
+1. add footer----done
+2. add header
+3. add burgermenu
+3. add dark/light mode
+ */
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #18181b; /* 主背景色，深灰黑 */
+  --foreground: #fff;    /* 主文字色，浅灰蓝 */
+  --primary: #828282;    /* 主要高亮色，深灰色 */
+  --secondary: #d9dddc;  /* 次级背景色，pearl river */
+  --accent: #d9dddc;     /* 高光色，pearl river */
 }
 
 @theme inline {
@@ -14,13 +24,48 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #151517;      /* 深色模式背景 */
+    --foreground: #e3e7ee;      /* 深色模式文字 */
+    --accent: #d9dddc;          /* 深色模式高光色，pearl river */
+    --subfore:#a9a9a9;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--background); 
+  color: var(--foreground);      
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+  display: flex; /* 在<div>header</div>这个container里面横向排列 */
+  padding: 16px 32px; /* 内边距：内容和container之间的空间 */
+  justify-content: space-evenly; /*distribute evenly*/
+  align-items: center; /* vertically center items */
+  background: var(--background); 
+  color: var(--subfore);         /* 默认文字颜色，pearl river */
+  border-bottom:0.5px solid #a9a9a9;
+  font-size: 1 rem;
+}
+
+.header a {
+  color: inherit;     
+  padding: 8px 12px;
+  border-radius: 4px;           /* 圆角，链接的背景边缘会有 4px 的圆角，不会是生硬的直角 */
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+}
+
+.header a:hover {
+  background: var(--accent);   /* 鼠标悬停时背景色，深灰色高亮 */
+  color: #fff;                  /* 悬停时文字变白 */
+}
+
+/* 可选：footer样式 */
+.footer {
+  padding: 16px 32px;
+  background: var(--background); /* footer背景色，pearl river */
+  color: var(--accent);         /* footer文字颜色，pearl river */
+  text-align: center;
+  font-size: 1rem;
 }

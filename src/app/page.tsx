@@ -1,5 +1,7 @@
-//在 page.tsx 里写首页内容(HomePage)，
-//
+//This is HomePage
+//1. onclick to select css class(dark/light)? global css
+//about and home page 也是tsx？ 
+
 
 import HamburgerMenu from './Components/HamburgerMenu';
 
