@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import HamburgerMenu from './Components/HamburgerMenu';
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,17 +36,18 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="header">
-          <a href="#">Theme</a>
-          <a href="#">Docker</a>
-          <a href="#">Prima</a>
-          <a href="#">Test</a>
-          <a href="#">About</a>
+          <a href="/theme">Theme</a>
+          <a href="/docker">Docker</a>
+          <a href="/prima">Prima</a>
+          <a href="/test">Test</a>
+          <a href="/about">About</a>
+          <HamburgerMenu />
         </div>
 
         
         {children}
 
-        
+
         <footer className="footer">
           <p>© 2025 My Website. All rights reserved.</p>
           <p>22088587</p>
