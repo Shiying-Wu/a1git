@@ -41,7 +41,7 @@
     display: block;
     position: absolute;
     top: 40px;
-    left: 0;
+    right: 0;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 200px;

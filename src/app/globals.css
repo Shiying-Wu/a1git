@@ -29,13 +29,51 @@
   }
 }
 
-.hero{
-  text-align: center;
-  padding: 100px 20px;
-  background: var(--background);
-  color: var(--foreground);
+/* 主要内容区域 */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
+/* 居中标题 - 固定为两行 */
+.centered-heading {
+  text-align: left;
+  margin: 40px 0 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.centered-heading h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  color: var(--foreground);
+  font-weight: bold;
+}
+
+/* 对齐描述 - 与上方标题对齐 */
+.aligned-description {
+  max-width: 800px;
+  margin: 0 auto 40px;
+  text-align: left;
+}
+
+.aligned-description p {
+  padding: 0;
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--subfore);
+  text-align: left;
+}
 
 body {
   background: var(--background); 
@@ -43,6 +81,23 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.title{
+  text-align:center;
+  color:var(--accent);
+  font-size: 30px; 
+  padding: 8px 12px;
+}
+
+/* student ID */
+.myId{
+  color:var(--accent);
+  padding: 4px 8px;
+  text-align:right;
+  border-radius: 15px; 
+  font-size: 0.75rem;
+}
+
+/* nagvi */
 .header {
   display: flex; /* 在<div>header</div>这个container里面横向排列 */
   padding: 16px 32px; /* 内边距：内容和container之间的空间 */
@@ -50,7 +105,8 @@ body {
   align-items: center; /* vertically center items */
   background: var(--background); 
   color: var(--subfore);         /* 默认文字颜色，pearl river */
-  border-bottom:0.5px solid #a9a9a9;
+  border-top:0.5px solid #a9a9a94e;
+  border-bottom:0.5px solid #a9a9a94e;
   font-size: 1 rem;
 }
 
@@ -67,11 +123,22 @@ body {
   color: #fff;                  /* 悬停时文字变白 */
 }
 
-/* 可选：footer样式 */
+/* 页脚样式调整 */
 .footer {
-  padding: 16px 32px;
-  background: var(--background); /* footer背景色，pearl river */
-  color: var(--accent);         /* footer文字颜色，pearl river */
-  text-align: center;
-  font-size: 1rem;
+  padding: 20px 0;
+  background: var(--background);
+  color: var(--accent);
+  border-top: 1px solid rgba(169, 169, 169, 0.3); /* 添加细边线 */
+  margin-top: 60px;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center; /* 居中排列 */
+  align-items: center;
+  font-size: 0.9rem;
+  gap: 30px; /* 项之间的间隔 */
 }

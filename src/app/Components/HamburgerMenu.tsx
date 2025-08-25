@@ -35,9 +35,11 @@ const HamburgerMenu = () => {
         <ul>
           {/* Menu links */}
           <li><a href="/">Home</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/services">Services</a></li>
-          <li><a href="/contact">Contact</a></li>
+          <li><a href="/theme">Theme</a></li>
+          <li><a href="/docker">Docker</a></li>
+          <li><a href="/prima">Prima</a></li>
+          <li><a href="/docker">docker</a></li>
+          <li><a href="/About">Prima</a></li>
         </ul>
       </nav>
     </div>
