@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import './ModeChange.css'; // If you have separate CSS
+
 
 const ModeChange = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
