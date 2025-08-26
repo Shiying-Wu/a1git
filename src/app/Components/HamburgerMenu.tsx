@@ -1,43 +1,50 @@
-// components/ModeChange.tsx
-'use client';
+// components/HamburgerMenu.tsx
+//'use client' directive tells Next.js this is a client-side component.
+'use client'
 
-import { useState, useEffect } from 'react';
+// Import React's special function： useState hook for managing state.
+import { useState } from 'react';
 
-const ModeChange = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+// Import CSS module for styling.
+import styles from './HamburgerMenu.module.css';
 
-  // Apply theme when component mounts
-  useEffect(() => {
-    // Check if we have a saved preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      setIsDarkMode(false);
-      document.documentElement.classList.add('light');
-    }
-  }, []);
+// Define the HamburgerMenu functional component.
+// useState是react这个library的hook function: 用于在adjust component's state.
+// const [当前状态, 更新状态的函数] = useState(初始状态)：此处当前状态false 
+const HamburgerMenu = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleTheme = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    
-    if (newDarkMode) {
-      document.documentElement.classList.remove('light');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.add('light');
-      localStorage.setItem('theme', 'light');
-    }
+  // Function to toggle the menu open/closed state.
+  const toggleMenu = () => {
+    setIsOpen(!isOpen); //即如果当前状态为false（默认），则将其状态更新为true
   };
 
+  // Render the hamburger menu UI.
   return (
-    <button 
-      className="theme-toggle"
-      onClick={toggleTheme}
-      aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-    >
-      {isDarkMode ? '☀️' : '🌙'}
-    </button>
+    // Main container div, styled using CSS module.
+    <div className={styles.container}>
+      {/* Hamburger icon, clicking toggles menu open/closed */}
+      <div className={styles.hamburger} onClick={toggleMenu}>
+        {/* Three bars for the hamburger icon, style changes if menu is open */}
+        <div className={isOpen ? styles.barOpen : styles.bar}></div>
+        <div className={isOpen ? styles.barOpen : styles.bar}></div>
+        <div className={isOpen ? styles.barOpen : styles.bar}></div>
+      </div>
+      {/* Navigation menu, style changes if menu is open */}
+      <nav className={isOpen ? styles.menuOpen : styles.menu}>
+        <ul>
+          {/* Menu links */}
+          <li><a href="/">Home</a></li>
+          <li><a href="/theme">Theme</a></li>
+          <li><a href="/docker">Docker</a></li>
+          <li><a href="/prima">Prima</a></li>
+          <li><a href="/docker">docker</a></li>
+          <li><a href="/About">Prima</a></li>
+        </ul>
+      </nav>
+    </div>
   );
 };
 
-export default ModeChange;
+// Export the component as default for use in other files.
+export default HamburgerMenu;
