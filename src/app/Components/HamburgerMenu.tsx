@@ -3,10 +3,10 @@
 'use client'
 
 // Import React's special function： useState hook for managing state.
-import { useState } from 'react';
-
 // Import CSS module for styling.
+import { useState } from 'react';
 import styles from './HamburgerMenu.module.css';
+
 
 // Define the HamburgerMenu functional component.
 // useState是react这个library的hook function: 用于在adjust component's state.
@@ -44,6 +44,7 @@ const HamburgerMenu = () => {
       </nav>
     </div>
   );
+
 };
 
 // Export the component as default for use in other files.

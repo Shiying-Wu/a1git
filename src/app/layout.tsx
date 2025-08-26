@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import HamburgerMenu from './Components/HamburgerMenu';
 import ModeChange from './Components/modeChange';
+import Navbar from './Components/Navbar';
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,11 +22,11 @@ export const metadata: Metadata = {
   description: "A purpose-built platform for automated development workflows",
 };
 
+
+
 export default function RootLayout({
   children
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode; }>) {
   return (
     <html lang="en">
       <body
@@ -37,16 +40,7 @@ export default function RootLayout({
           FlowCode
         </div>
 
-        <div className="header">
-          <a href="/">Home</a>
-          <a href="/theme">Theme</a>
-          <a href="/docker">Docker</a>
-          <a href="/prima">Prima</a>
-          <a href="/test">Test</a>
-          <a href="/about">About</a>
-          <HamburgerMenu />
-          <ModeChange/>
-        </div>
+        <Navbar />
 
         {/* main contain-children */}
         <main className="main-content">
