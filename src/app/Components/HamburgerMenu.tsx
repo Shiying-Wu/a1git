@@ -30,6 +30,7 @@ const HamburgerMenu = () => {
         <div className={isOpen ? styles.barOpen : styles.bar}></div>
         <div className={isOpen ? styles.barOpen : styles.bar}></div>
       </div>
+
       {/* Navigation menu, style changes if menu is open */}
       <nav className={isOpen ? styles.menuOpen : styles.menu}>
         <ul>
@@ -38,8 +39,7 @@ const HamburgerMenu = () => {
           <li><a href="/theme">Theme</a></li>
           <li><a href="/docker">Docker</a></li>
           <li><a href="/prima">Prima</a></li>
-          <li><a href="/docker">docker</a></li>
-          <li><a href="/About">Prima</a></li>
+          <li><a href="/About">About</a></li>
         </ul>
       </nav>
     </div>
