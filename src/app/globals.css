@@ -2,16 +2,29 @@
 1. add footer----done
 2. add header
 3. add burgermenu
-3. add dark/light mode
+4. add dark/light mode
  */
 
 @import "tailwindcss";
 
+/* Define color variables - consolidated to avoid duplicates */
 :root {
   --background: #18181b; 
   --foreground: #fff;  /*text 1*/
   --accent: #d9dddc; 
-  --subfore:#a9a9a9;    /*text 2*/
+  --subfore: #a9a9a9;    /*text 2*/
+  --card-bg: #1f1f23;
+  --card-border: #2d2d32;
+}
+
+/* Light mode variables */
+:root.light {
+  --background: #f8f9fa;
+  --foreground: #212529;
+  --accent: #495057;
+  --subfore: #6c757d;
+  --card-bg: #ffffff;
+  --card-border: #dee2e6;
 }
 
 @theme inline {
@@ -21,22 +34,14 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #151517;      
-    --foreground: #e3e7ee;     
-    --accent: #d9dddc;          
-  }
-}
-
-/* 主要内容区域 */
+/* Main content for each page */
 .main-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* 居中标题 - 固定为两行 */
+/* website heading */
 .centered-heading {
   text-align: left;
   margin: 40px 0 20px;
@@ -59,7 +64,7 @@
   font-weight: bold;
 }
 
-/* 对齐描述 - 与上方标题对齐 */
+/* website description */
 .aligned-description {
   max-width: 800px;
   margin: 0 auto 40px;
@@ -79,6 +84,7 @@ body {
   background: var(--background); 
   color: var(--foreground);      
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .title{
@@ -97,39 +103,41 @@ body {
   font-size: 0.75rem;
 }
 
-/* nagvi */
+/* navigation */
 .header {
-  display: flex; /* 在<div>header</div>这个container里面横向排列 */
-  padding: 16px 32px; /* 内边距：内容和container之间的空间 */
-  justify-content: space-evenly; /*distribute evenly*/
-  align-items: center; /* vertically center items */
+  display: flex;
+  padding: 16px 32px;
+  justify-content: space-evenly;
+  align-items: center;
   background: var(--background); 
-  color: var(--subfore);         /* 默认文字颜色，pearl river */
-  border-top:0.5px solid #a9a9a94e;
-  border-bottom:0.5px solid #a9a9a94e;
-  font-size: 1 rem;
+  color: var(--subfore);
+  border-top: 0.5px solid rgba(169, 169, 169, 0.3);
+  border-bottom: 0.5px solid rgba(169, 169, 169, 0.3);
+  font-size: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .header a {
   color: inherit;     
   padding: 8px 12px;
-  border-radius: 4px;           /* 圆角，链接的背景边缘会有 4px 的圆角，不会是生硬的直角 */
+  border-radius: 4px;
   transition: background 0.2s, color 0.2s;
   text-decoration: none;
 }
 
 .header a:hover {
-  background: var(--accent);   /* 鼠标悬停时背景色，深灰色高亮 */
-  color: #fff;                  /* 悬停时文字变白 */
+  background: var(--accent);
+  color: #fff;
 }
 
-/* 页脚样式调整 */
+/* footer */
 .footer {
   padding: 20px 0;
   background: var(--background);
   color: var(--accent);
-  border-top: 1px solid rgba(169, 169, 169, 0.3); /* 添加细边线 */
+  border-top: 1px solid rgba(169, 169, 169, 0.3); 
   margin-top: 60px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .footer-content {
@@ -137,56 +145,41 @@ body {
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
-  justify-content: center; /* 居中排列 */
+  justify-content: center;
   align-items: center;
   font-size: 0.9rem;
-  gap: 30px; /* 项之间的间隔 */
+  gap: 30px;
 }
 
-/* 暗黑/亮色模式变量 - 新增部分 */
-:root {
-  --background: #18181b; 
-  --foreground: #fff;
-  --accent: #d9dddc; 
-  --subfore:#a9a9a9;
-  --card-bg: #1f1f23;
-  --card-border: #2d2d32;
-}
-
-:root.light {
-  --background: #f8f9fa;
-  --foreground: #212529;
-  --accent: #495057;
-  --subfore: #6c757d;
-  --card-bg: #ffffff;
-  --card-border: #dee2e6;
-}
-
-/* 主题切换按钮  */
+/* Theme toggle button */
 .theme-toggle {
   background: none;
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  padding: 6px;
+  padding: 8px;
   border-radius: 50%;
-  transition: background-color 0.3s;
-  margin-left: 10px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
 }
 
 .theme-toggle:hover {
   background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
 }
 
 :root.light .theme-toggle:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* 平滑过渡效果 - 新增部分 */
-body {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.header, .footer {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+/* Ensure smooth transitions for all theme-affected elements */
+.centered-heading h1,
+.aligned-description p,
+.title,
+.myId {
+  transition: color 0.3s ease;
 }
