@@ -142,3 +142,51 @@ body {
   font-size: 0.9rem;
   gap: 30px; /* 项之间的间隔 */
 }
+
+/* 暗黑/亮色模式变量 - 新增部分 */
+:root {
+  --background: #18181b; 
+  --foreground: #fff;
+  --accent: #d9dddc; 
+  --subfore:#a9a9a9;
+  --card-bg: #1f1f23;
+  --card-border: #2d2d32;
+}
+
+:root.light {
+  --background: #f8f9fa;
+  --foreground: #212529;
+  --accent: #495057;
+  --subfore: #6c757d;
+  --card-bg: #ffffff;
+  --card-border: #dee2e6;
+}
+
+/* 主题切换按钮  */
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+  margin-left: 10px;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+:root.light .theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 平滑过渡效果 - 新增部分 */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header, .footer {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
