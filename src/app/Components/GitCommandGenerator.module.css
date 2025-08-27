@@ -78,6 +78,12 @@
   background: var(--card-bg);
 }
 
+.buttonRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 .generateButton {
   padding: 12px 24px;
   background-color: var(--card-bg);
@@ -88,7 +94,6 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  align-self: flex-start;
 }
 
 .generateButton:hover {
@@ -97,9 +102,39 @@
   transform: translateY(-1px);
 }
 
+.executeButton {
+  padding: 12px 24px;
+  background-color: #10b981;
+  color: white;
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.executeButton:hover:not(:disabled) {
+  background-color: #059669;
+  border-color: #059669;
+  transform: translateY(-1px);
+}
+
+.executeButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.executeButton.executing {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+}
+
 .commandsSection {
   border-top: 1px solid var(--card-border);
   padding-top: 24px;
+  margin-bottom: 24px;
 }
 
 .commandsHeader {
@@ -152,6 +187,85 @@
   color: var(--foreground);
 }
 
+.resultsSection {
+  border-top: 1px solid var(--card-border);
+  padding-top: 24px;
+}
+
+.resultsTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0 0 16px 0;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resultItem {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.resultItem.success {
+  border-left: 4px solid #10b981;
+}
+
+.resultItem.error {
+  border-left: 4px solid #ef4444;
+}
+
+.commandName {
+  font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--subfore);
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+
+.resultStatus {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.resultItem.success .resultStatus {
+  color: #10b981;
+}
+
+.resultItem.error .resultStatus {
+  color: #ef4444;
+}
+
+.resultOutput {
+  background-color: var(--background);
+  padding: 12px;
+  border-radius: 6px;
+  font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--foreground);
+  margin: 8px 0 0 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.resultError {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-top: 8px;
+  border-left: 3px solid #ef4444;
+}
+
 /* Light mode specific adjustments */
 :root.light .container {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
@@ -171,6 +285,11 @@
   .inputRow {
     flex-direction: column;
     gap: 16px;
+  }
+  
+  .buttonRow {
+    flex-direction: column;
+    gap: 12px;
   }
   
   .commandsHeader {

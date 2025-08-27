@@ -9,8 +9,11 @@ const GitCommandGenerator = () => {
   const [token, setToken] = useState('');
   const [owner, setOwner] = useState('');
   const [repo, setRepo] = useState('');
+  const [customText, setCustomText] = useState('');
   const [commands, setCommands] = useState('');
   const [copied, setCopied] = useState(false);
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [executionResult, setExecutionResult] = useState<any>(null);
 
   const generateCommands = () => {
     if (!username || !token || !owner || !repo) {
@@ -22,7 +25,7 @@ const GitCommandGenerator = () => {
 cd ${repo}
 git checkout -b update-readme
 echo "# This is the System" >> README.md
-echo "Successfully connected!" >> README.md
+echo "${customText || 'Successfully connected!'}" >> README.md
 git add README.md
 git commit -m "Update README.md: Add new section"
 git push origin update-readme
@@ -30,6 +33,59 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
     
     setCommands(generatedCommands);
     setCopied(false);
+  };
+
+  const executeCommands = async () => {
+    if (!username || !token || !owner || !repo) {
+      alert('Please fill in all required fields before executing commands.');
+      return;
+    }
+
+    setIsExecuting(true);
+    setExecutionResult(null);
+
+    try {
+      const response = await fetch('/api/execute-git', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          token,
+          owner,
+          repo,
+          customText
+        }),
+      });
+
+      // 检查响应状态
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // 检查响应内容类型
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        console.error('Non-JSON response:', text);
+        throw new Error('Server returned non-JSON response');
+      }
+
+      const result = await response.json();
+      setExecutionResult(result);
+
+      if (result.success) {
+        alert('Commands executed successfully! Check the results below.');
+      } else {
+        alert(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Execution error:', error);
+      alert(`Failed to execute commands: ${error.message}`);
+    } finally {
+      setIsExecuting(false);
+    }
   };
 
   const copyToClipboard = () => {
@@ -44,7 +100,7 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
     <div className={styles.container}>
       <div className={styles.header}>
         <h2 className={styles.title}>Git Command Generator</h2>
-        <p className={styles.subtitle}>Generate Git commands for repository operations</p>
+        <p className={styles.subtitle}>Generate and execute Git commands for repository operations</p>
       </div>
       
       <div className={styles.form}>
@@ -95,10 +151,32 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
             />
           </div>
         </div>
+
+        <div className={styles.inputRow}>
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>Custom Text (Optional)</label>
+            <input
+              type="text"
+              value={customText}
+              onChange={(e) => setCustomText(e.target.value)}
+              placeholder="Enter custom text for README"
+              className={styles.input}
+            />
+          </div>
+        </div>
         
-        <button className={styles.generateButton} onClick={generateCommands}>
-          Generate Commands
-        </button>
+        <div className={styles.buttonRow}>
+          <button className={styles.generateButton} onClick={generateCommands}>
+            Generate Commands
+          </button>
+          <button 
+            className={`${styles.executeButton} ${isExecuting ? styles.executing : ''}`} 
+            onClick={executeCommands}
+            disabled={isExecuting}
+          >
+            {isExecuting ? 'Executing...' : 'Execute Commands'}
+          </button>
+        </div>
       </div>
       
       {commands && (
@@ -115,6 +193,28 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
           <pre className={styles.commands}>
             {commands}
           </pre>
+        </div>
+      )}
+
+      {executionResult && (
+        <div className={styles.resultsSection}>
+          <h3 className={styles.resultsTitle}>Execution Results</h3>
+          <div className={styles.results}>
+            {executionResult.results?.map((result: any, index: number) => (
+              <div key={index} className={`${styles.resultItem} ${result.success ? styles.success : styles.error}`}>
+                <div className={styles.commandName}>{result.command}</div>
+                <div className={styles.resultStatus}>
+                  {result.success ? '✅ Success' : '❌ Failed'}
+                </div>
+                {result.output && (
+                  <pre className={styles.resultOutput}>{result.output}</pre>
+                )}
+                {result.error && (
+                  <div className={styles.resultError}>{result.error}</div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
