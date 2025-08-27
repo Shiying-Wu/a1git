@@ -176,10 +176,25 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Ensure smooth transitions for all theme-affected elements */
+/* transitions for all theme-affected elements */
 .centered-heading h1,
 .aligned-description p,
 .title,
 .myId {
-  transition: color 0.3s ease;
+  transition: color 0.1s ease;
+}
+
+
+/* video */
+.video-section{
+display: flex;
+justify-content: center;
+margin: 40px 0;
+}
+
+.video-section video{
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--card-border);
 }
