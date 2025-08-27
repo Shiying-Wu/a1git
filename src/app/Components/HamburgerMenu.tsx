@@ -39,6 +39,7 @@ const HamburgerMenu = () => {
           <li><a href="/theme">Theme</a></li>
           <li><a href="/docker">Docker</a></li>
           <li><a href="/prima">Prima</a></li>
+          <li><a href="/test">Test</a></li>
           <li><a href="/About">About</a></li>
         </ul>
       </nav>
