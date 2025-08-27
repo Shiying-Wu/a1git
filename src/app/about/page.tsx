@@ -11,7 +11,7 @@ const About = () => {
 
             <section className="video-section">
                 <video width="640" height="600" controls>
-                    <source src="/a1git-introduction.mp4" type="video/mp4" />
+                    <source src="/a1git-introduction-480.mov" />
                 </video>
             </section>
         </main>
@@ -19,3 +19,4 @@ const About = () => {
 };
 
 export default About;
+
