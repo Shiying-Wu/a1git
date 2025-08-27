@@ -35,7 +35,7 @@ const About=()=>{
 
             <section className="video-section">
                 <video width="640" height="600" controls>
-                    <source src="#" type="video/mp4" />
+                    <source src="/a1git-video.mp4" type="video/mp4" />
                 </video>
             </section>
         </main>
