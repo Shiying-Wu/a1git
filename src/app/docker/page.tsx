@@ -1,9 +1,11 @@
 import { Session } from 'inspector/promises';
-import HamburgerMenu from '../Components/HamburgerMenu';
+import DockerGenerator from '../Components/DockerGenerator';
 
-
-export default function(){
-    return(
-        <h1> this is empty page</h1>
-    )
+export default function Page() {
+    return (
+        <main className="main-content">
+            <section className="centered-heading"><h1>Dockerize your Next.js App</h1></section>
+            <DockerGenerator />
+        </main>
+    );
 }
