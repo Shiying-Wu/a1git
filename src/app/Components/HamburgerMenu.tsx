@@ -38,7 +38,7 @@ const HamburgerMenu = () => {
           <li><a href="/">Home</a></li>
           <li><a href="/theme">Theme</a></li>
           <li><a href="/docker">Docker</a></li>
-          <li><a href="/prima">Prima</a></li>
+          <li><a href="/sequelize">Sequelize</a></li>
           <li><a href="/test">Test</a></li>
           <li><a href="/about">About</a></li>
         </ul>
