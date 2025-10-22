@@ -4,8 +4,7 @@ import "./globals.css";
 import HamburgerMenu from './Components/HamburgerMenu';
 import ModeChange from './Components/modeChange';
 import Navbar from './Components/Navbar';
-
-
+import { GitDataProvider } from "./context/GitDataContext"; // 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,39 +21,37 @@ export const metadata: Metadata = {
   description: "A purpose-built platform for automated development workflows",
 };
 
-
-
 export default function RootLayout({
   children
 }: Readonly<{ children: React.ReactNode; }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div className="myId">
-          Student No.22088587
-        </div>
-
-        <div className="title">
-          FlowCode
-        </div>
-
-        <Navbar />
-
-        {/* main contain-children */}
-        <main className="main-content">
-          {children}
-        </main>
-
-        {/* footer */}
-        <footer className="footer">
-          <div className="footer-content">
-            <span>© 2025/08/20. All rights reserved.</span>
-            <span>22088587</span>
-            <span>Shiying Wu</span>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <GitDataProvider> {/* ✅ Wrap your app with context */}
+          <div className="myId">
+            Student No.22088587
           </div>
-        </footer>
+
+          <div className="title">
+            FlowCode
+          </div>
+
+          <Navbar />
+
+          {/* main contain-children */}
+          <main className="main-content">
+            {children}
+          </main>
+
+          {/* footer */}
+          <footer className="footer">
+            <div className="footer-content">
+              <span>© 2025/08/20. All rights reserved.</span>
+              <span>22088587</span>
+              <span>Shiying Wu</span>
+            </div>
+          </footer>
+        </GitDataProvider>
       </body>
     </html>
   );

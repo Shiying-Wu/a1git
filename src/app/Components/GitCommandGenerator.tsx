@@ -1,8 +1,8 @@
-// components/GitCommandGenerator.tsx
-'use client'
+'use client';
 
 import { useState } from 'react';
 import styles from './GitCommandGenerator.module.css';
+import { useGitData } from '../context/GitDataContext';
 
 const GitCommandGenerator = () => {
   const [username, setUsername] = useState('');
@@ -14,6 +14,8 @@ const GitCommandGenerator = () => {
   const [copied, setCopied] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
   const [executionResult, setExecutionResult] = useState<any>(null);
+
+  const { setGitData } = useGitData();
 
   const generateCommands = () => {
     if (!username || !token || !owner || !repo) {
@@ -30,9 +32,25 @@ git add README.md
 git commit -m "Update README.md: Add new section"
 git push origin update-readme
 gh pr create --title "Update README.md" --body "Added a new section to the README"`;
-    
+
     setCommands(generatedCommands);
     setCopied(false);
+
+    const payload = {
+      username,
+      token,
+      owner,
+      repo,
+      customText,
+      commands: generatedCommands,
+      ts: Date.now()
+    };
+
+    // ✅ Save to global context (which now uses cookies)
+    setGitData(payload);
+
+    // ✅ No need for localStorage anymore!
+    alert('✅ GitHub info saved successfully! You can now navigate to the Docker tab to generate and commit Docker files.');
   };
 
   const executeCommands = async () => {
@@ -47,24 +65,14 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
     try {
       const response = await fetch('/api/execute-git', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username,
-          token,
-          owner,
-          repo,
-          customText
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, token, owner, repo, customText }),
       });
 
-      // 检查响应状态
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // 检查响应内容类型
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         const text = await response.text();
@@ -80,7 +88,7 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
       } else {
         alert(`Error: ${result.error}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Execution error:', error);
       alert(`Failed to execute commands: ${error.message}`);
     } finally {
@@ -102,7 +110,7 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
         <h2 className={styles.title}>Git Command Generator</h2>
         <p className={styles.subtitle}>Generate and execute Git commands for repository operations</p>
       </div>
-      
+
       <div className={styles.form}>
         <div className={styles.inputRow}>
           <div className={styles.inputGroup}>
@@ -115,7 +123,7 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
               className={styles.input}
             />
           </div>
-          
+
           <div className={styles.inputGroup}>
             <label className={styles.label}>GitHub Token</label>
             <input
@@ -127,7 +135,7 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
             />
           </div>
         </div>
-        
+
         <div className={styles.inputRow}>
           <div className={styles.inputGroup}>
             <label className={styles.label}>Repository Owner</label>
@@ -139,7 +147,7 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
               className={styles.input}
             />
           </div>
-          
+
           <div className={styles.inputGroup}>
             <label className={styles.label}>Repository Name</label>
             <input
@@ -164,13 +172,13 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
             />
           </div>
         </div>
-        
+
         <div className={styles.buttonRow}>
           <button className={styles.generateButton} onClick={generateCommands}>
             Generate Commands
           </button>
-          <button 
-            className={`${styles.executeButton} ${isExecuting ? styles.executing : ''}`} 
+          <button
+            className={`${styles.executeButton} ${isExecuting ? styles.executing : ''}`}
             onClick={executeCommands}
             disabled={isExecuting}
           >
@@ -178,21 +186,19 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
           </button>
         </div>
       </div>
-      
+
       {commands && (
         <div className={styles.commandsSection}>
           <div className={styles.commandsHeader}>
             <h3 className={styles.commandsTitle}>Generated Commands</h3>
-            <button 
-              className={`${styles.copyButton} ${copied ? styles.copied : ''}`} 
+            <button
+              className={`${styles.copyButton} ${copied ? styles.copied : ''}`}
               onClick={copyToClipboard}
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
-          <pre className={styles.commands}>
-            {commands}
-          </pre>
+          <pre className={styles.commands}>{commands}</pre>
         </div>
       )}
 
@@ -206,12 +212,8 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
                 <div className={styles.resultStatus}>
                   {result.success ? '✅ Success' : '❌ Failed'}
                 </div>
-                {result.output && (
-                  <pre className={styles.resultOutput}>{result.output}</pre>
-                )}
-                {result.error && (
-                  <div className={styles.resultError}>{result.error}</div>
-                )}
+                {result.output && <pre className={styles.resultOutput}>{result.output}</pre>}
+                {result.error && <div className={styles.resultError}>{result.error}</div>}
               </div>
             ))}
           </div>

@@ -27,7 +27,7 @@ export default function Navbar() {
     { name: 'Home', path: '/' },
     { name: 'Theme', path: '/theme' },
     { name: 'Docker', path: '/docker' },
-    { name: 'Prima', path: '/prima' },
+    { name: 'Sequelize', path: '/sequelize' },
     { name: 'Test', path: '/test' },
     { name: 'About', path: '/about' },
   ];
