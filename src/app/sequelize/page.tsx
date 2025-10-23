@@ -1,144 +1,116 @@
 'use client';
 
 import { useState } from 'react';
-import { useGitData } from '../context/GitDataContext';
-import HamburgerMenu from '../Components/HamburgerMenu';
+
+type UserInput = {
+  name: string;
+  lineStatus: 'offline' | 'online';
+};
 
 export default function SequelizePage() {
-  const { gitData } = useGitData();
-  const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [users, setUsers] = useState<UserInput[]>([
+    { name: 'abcccc', lineStatus: 'offline' },
+  ]);
+  const [commands, setCommands] = useState<string>('');
 
-  const generateFiles = () => [
-    {
-      path: 'src/app/api/models/User.js',
-      content: `const { DataTypes } = require('sequelize');
-module.exports = (sequelize) => {
-  return sequelize.define('User', {
-    name: DataTypes.STRING,
-    email: DataTypes.STRING
-  });
-};`
-    },
-    {
-      path: 'src/app/api/routes/user.js',
-      content: `const express = require('express');
-const router = express.Router();
-const db = require('../models');
-const User = db.User;
+  const handleChange = (index: number, field: keyof UserInput, value: string) => {
+    const newUsers = [...users];
+    newUsers[index][field] = value as any;
+    setUsers(newUsers);
+  };
 
-router.get('/', async (req, res) => {
-  const users = await User.findAll();
-  res.json(users);
+  const addUser = () => {
+    setUsers([...users, { name: '', lineStatus: 'offline' }]);
+  };
+
+  const removeUser = (index: number) => {
+    const newUsers = [...users];
+    newUsers.splice(index, 1);
+    setUsers(newUsers);
+  };
+
+  const generateCommands = () => {
+    const enumValues = Array.from(new Set(users.map(u => u.lineStatus))).map(s => `'${s}'`).join(',');
+
+    const userModel = `
+const { DataTypes } = require('sequelize');
+const sequelize = require('../lib/sequelize');
+
+const User = sequelize.define('User', {
+  name: DataTypes.STRING,
+  lineStatus: DataTypes.ENUM(${enumValues})
 });
 
-router.post('/', async (req, res) => {
-  const user = await User.create(req.body);
-  res.json(user);
+module.exports = User;
+`.trim();
+
+    const sequelizeLib = `
+const { Sequelize } = require('sequelize');
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './database.sqlite'
 });
 
-module.exports = router;`
-    },
-    {
-      path: 'src/app/frontend/pages/users.tsx',
-      content: `import useSWR from 'swr';
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+module.exports = sequelize;
+`.trim();
 
-export default function UsersPage() {
-  const { data, error } = useSWR('/api/users', fetcher);
-  if (error) return <div>Error loading users</div>;
-  if (!data) return <div>Loading...</div>;
-  return (
-    <ul>
-      {data.map((user: any) => (
-        <li key={user.id}>{user.name} - {user.email}</li>
-      ))}
-    </ul>
-  );
-}`
-    }
-  ];
+    const shellCommands = `
+# Install dependencies
+npm install sequelize sqlite3
 
-  const handleCommit = async () => {
-    if (!gitData || !gitData.token || !gitData.repo || !gitData.owner) {
-      alert('Please generate GitHub credentials on the Home page first.');
-      return;
-    }
+# Create folders
+mkdir -p models lib
 
-    setBusy(true);
-    setResult(null);
+# Create model file
+echo "${userModel.replace(/\n/g, '\\n').replace(/"/g, '\\"')}" > models/user.js
 
-    const files = generateFiles();
+# Create sequelize lib
+echo "${sequelizeLib.replace(/\n/g, '\\n').replace(/"/g, '\\"')}" > lib/sequelize.js
+`;
 
-    try {
-      const resp = await fetch('/api/sequelize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: gitData.username,
-          token: gitData.token,
-          owner: gitData.owner,
-          repo: gitData.repo,
-          files
-        })
-      });
-
-      const json = await resp.json();
-      setResult(json);
-      if (resp.ok) {
-        alert('✅ Sequelize CRUD files committed to new branch: ' + json.branch);
-      } else {
-        alert('❌ Commit failed: ' + JSON.stringify(json));
-      }
-    } catch (e: any) {
-      alert('Request failed: ' + e.message);
-    } finally {
-      setBusy(false);
-    }
+    setCommands(shellCommands.trim());
   };
 
   return (
-    <>
-      <HamburgerMenu />
+    <div style={{ padding: 20 }}>
+      <h1>Sequelize CRUD Command Generator</h1>
 
-      <div className="centered-heading">
-        <h1>Sequelize Integration for Automated DevOps Workflows</h1>
+      <div style={{ marginTop: 20 }}>
+        <h3>Enter Sample Users</h3>
+        {users.map((user, idx) => (
+          <div key={idx} style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+            <input
+              type="text"
+              placeholder="username"
+              value={user.name}
+              onChange={e => handleChange(idx, 'name', e.target.value)}
+            />
+            <select
+              value={user.lineStatus}
+              onChange={e => handleChange(idx, 'lineStatus', e.target.value)}
+            >
+              <option value="offline">offline</option>
+              <option value="online">online</option>
+            </select>
+            <button onClick={() => removeUser(idx)}>Remove</button>
+          </div>
+        ))}
+
+        <button onClick={addUser} style={{ marginTop: 10 }}>
+          Add User
+        </button>
       </div>
 
-      <div className="aligned-description">
-        <p>
-          This module generates Sequelize CRUD templates and commits them to GitHub in a new branch.
-          It’s designed to integrate seamlessly with your Dockerized Next.js application.
-        </p>
+      <div style={{ marginTop: 20 }}>
+        <button onClick={generateCommands}>Generate Commands</button>
       </div>
 
-      <div className="aligned-description">
-        {!gitData ? (
-          <p>No GitHub credentials found. Please generate them on the Home page.</p>
-        ) : (
-          <>
-            <p>
-              <strong>GitHub Repository Connected</strong><br />
-              Owner: {gitData.owner} | Repo: {gitData.repo} | User: {gitData.username}
-            </p>
-
-            <p style={{ marginTop: '20px' }}>
-              <strong>Ready to Generate Sequelize CRUD?</strong><br />
-              This will create a new branch, commit Sequelize CRUD files, and open a pull request.
-            </p>
-
-            <button className="primary-button" onClick={handleCommit} disabled={busy}>
-              {busy ? 'Committing...' : 'Generate & Commit Sequelize CRUD'}
-            </button>
-          </>
-        )}
-
-        {result && (
-          <pre style={{ marginTop: '20px' }}>
-            {JSON.stringify(result, null, 2)}
-          </pre>
-        )}
-      </div>
-    </>
+      {commands && (
+        <div style={{ marginTop: 20 }}>
+          <h3>Copy & Paste These Commands in Terminal</h3>
+          <pre style={{ backgroundColor: '#0b0000ff', padding: 10 }}>{commands}</pre>
+        </div>
+      )}
+    </div>
   );
 }

@@ -7,6 +7,8 @@ type GitData = {
   token: string;
   owner: string;
   repo: string;
+  branch?: string;        // ✅ 新增字段
+  workDir?: string; 
   customText?: string;
   commands?: string;
 };

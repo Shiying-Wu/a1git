@@ -53,48 +53,53 @@ gh pr create --title "Update README.md" --body "Added a new section to the READM
     alert('✅ GitHub info saved successfully! You can now navigate to the Docker tab to generate and commit Docker files.');
   };
 
-  const executeCommands = async () => {
-    if (!username || !token || !owner || !repo) {
-      alert('Please fill in all required fields before executing commands.');
-      return;
-    }
+const executeCommands = async () => {
+  if (!username || !token || !owner || !repo) {
+    alert('Please fill in all required fields before executing commands.');
+    return;
+  }
 
-    setIsExecuting(true);
-    setExecutionResult(null);
+  setIsExecuting(true);
+  setExecutionResult(null);
 
-    try {
-      const response = await fetch('/api/execute-git', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, token, owner, repo, customText }),
+  try {
+    const response = await fetch('/api/execute-git', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, token, owner, repo, customText }),
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const result = await response.json();
+    setExecutionResult(result);
+
+    if (result.success) {
+      alert('Commands executed successfully!');
+
+      // ✅ Save gitData including workDir
+      setGitData({
+        username,
+        token,
+        owner,
+        repo,
+        branch: result.branch,      // branch from backend
+        workDir: result.workDir,    // ⬅️ new field
+        customText,
+        commands
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('Non-JSON response:', text);
-        throw new Error('Server returned non-JSON response');
-      }
-
-      const result = await response.json();
-      setExecutionResult(result);
-
-      if (result.success) {
-        alert('Commands executed successfully! Check the results below.');
-      } else {
-        alert(`Error: ${result.error}`);
-      }
-    } catch (error: any) {
-      console.error('Execution error:', error);
-      alert(`Failed to execute commands: ${error.message}`);
-    } finally {
-      setIsExecuting(false);
+    } else {
+      alert(`Error: ${result.error}`);
     }
-  };
+  } catch (error: any) {
+    console.error('Execution error:', error);
+    alert(`Failed to execute commands: ${error.message}`);
+  } finally {
+    setIsExecuting(false);
+  }
+};
+
 
   const copyToClipboard = () => {
     if (commands) {
